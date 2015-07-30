@@ -13,4 +13,25 @@ class Ship
   def sunk?
     hits == size
   end
+
+  def self.patrol_boat
+    Ship.new(2)
+  end
+
+  def self.destroyer
+    Ship.new(3)
+  end
+
+  def self.submarine
+    Ship.new(3)
+  end
+
+  def self.battleship
+    Ship.new(4)
+  end
+
+  def self.aircraft_carrier
+    Ship.new(5)
+  end
+
 end

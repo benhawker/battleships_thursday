@@ -20,4 +20,5 @@ describe Ship do
       expect(subject.sunk?).to eq false
     end
   end
+
 end

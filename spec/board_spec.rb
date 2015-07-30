@@ -4,6 +4,13 @@ describe Board do
   let(:ship) { double :ship }
   before(:each) { allow(ship).to receive :register_hit }
 
+  describe "board constraints" do
+    before(:each) { allow(ship).to receive(:size) { 3 } }
+    it "should raise error if coords are outside accepted coords" do
+      expect{subject.place_ship(:ship, :A10, :Vertically)}.to raise_error 'Outside accepted coords'
+    end
+  end
+
 
   context 'ships of size 1' do
     before(:each) { allow(ship).to receive(:size) { 1 } }
@@ -94,4 +101,37 @@ describe Board do
       expect(subject.all_sunk?).to eq false
     end
   end
+
+  context "logging hits and misses" do
+    before(:each) { allow(ship).to receive(:size) { 2 } }
+    describe "hits" do
+      it "should track the number of hits" do 
+        subject.place_ship(ship, :A1, :Vertically)
+        subject.fire(:A1)
+        expect(subject.hits).to eq [:A1]
+      end
+    end
+
+    describe "misses" do 
+      it "should track the number of misses" do
+        subject.place_ship(ship, :A1, :Vertically)
+        subject.fire(:G8)
+        expect(subject.misses).to eq [:G8]
+      end
+    end
+
+    describe "repeat hit or miss" do
+      it "should raise an error if the user hits the same spot again" do
+        subject.place_ship(ship, :A1, :Vertically)
+        subject.fire(:A1)
+        expect { subject.fire(:A1) }.to raise_error "You have already hit that spot"
+      end
+
+      it "should raise an error if the user misses the same spot again" do
+        subject.fire(:J10)
+        expect { subject.fire(:J10) }.to raise_error "You have already missed that spot"
+      end
+    end
+  end
+
 end
