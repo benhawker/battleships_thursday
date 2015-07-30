@@ -11,8 +11,8 @@ class Board
   def place_ship(ship, coord, direction)
     all_coords = all_coords(ship.size, coord, direction)
     fail 'Ship overlap' if positions.include?(coord)
-    @ships << ship
-    @positions << all_coords
+    @ships += all_coords
+    all_coords.each { |coord| @positions[coord] = ship }
   end
 
   def all_coords(size, coord, direction)
