@@ -12,7 +12,7 @@ describe Ship do
 
   describe '#sunk?' do
     it 'will be sunk when hits == size' do
-      size.times { subject.register_hit }
+      subject.size.times { subject.register_hit }
       expect(subject.sunk?).to eq true
     end
 

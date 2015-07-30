@@ -31,27 +31,29 @@ describe Board do
     describe '#place_ship' do
       it 'receives a ship' do
         subject.place_ship(ship, :A1, :Vertically)
-        expect(subject.ships).to eq [ship]
+        expect(subject.ships).to eq [:A1, :A2]
       end
 
       it 'places the ship on specific coord' do
         subject.place_ship(ship, :A1, :Vertically)
-        expect(subject.positions).to eq [:A1, :A2]
+        expect(subject.positions[:A1]).to eq ship
       end
 
       it 'places the ship on specific coord' do
-        subject.place_ship(ship, :A1, :Horizontally)
-        expect(subject.positions).to eq [:A1, :B1]
+        subject.place_ship(ship, :A1, :Vertically)
+        expect(subject.positions[:A2]).to eq ship
       end
 
       it 'does not allow ships to overlap' do
-        subject.place_ship(ship, :B1, :Horizontally)
-        expect { subject.place_ship(ship, :A2, :Vertically) }.to raise_error 'Ship overlap'
+        subject.place_ship(ship, :A2, :Horizontally)
+        expect { subject.place_ship(ship, :B1, :Vertically) }.to raise_error 'Ship overlap'
       end
     end
   end
 
   describe '#fire' do
+    before(:each) { allow(ship).to receive(:size) { 2 } }
+
     it 'should return hit if it hits' do
       subject.place_ship(ship, :A1, :Vertically)
       expect(subject.fire(:A1)).to eq :hit
@@ -76,9 +78,12 @@ describe Board do
   end
 
   describe '#all_sunk' do
+    before(:each) { allow(ship).to receive(:size) { 2 } }
+
     it 'should return true when ships are all sunk' do
       subject.place_ship(ship, :A1, :Vertically)
       subject.fire(:A1)
+      subject.fire(:A2)
       expect(subject.all_sunk?).to eq true
     end
 

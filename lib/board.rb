@@ -10,9 +10,9 @@ class Board
 
   def place_ship(ship, coord, direction)
     all_coords = all_coords(ship.size, coord, direction)
-    fail 'Ship overlap' if positions.include?(coord)
+    fail 'Ship overlap' unless (ships & all_coords).empty?
     @ships += all_coords
-    all_coords.each { |coord| @positions[coord] = ship }
+    all_coords.each { |coordinate| @positions[coordinate] = ship }
   end
 
   def all_coords(size, coord, direction)
@@ -40,9 +40,9 @@ class Board
   end
 
   def fire(coord)
-    if positions.include?(coord)
-      ships.pop.register_hit
-      positions.delete(coord)
+    if ships.include?(coord)
+      positions[coord].register_hit
+      ships.delete(coord)
       :hit
     else
       :miss
@@ -50,7 +50,7 @@ class Board
   end
 
   def all_sunk?
-    positions.empty?
+    ships.empty?
   end
 end
 
